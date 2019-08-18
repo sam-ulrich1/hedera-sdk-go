@@ -3,7 +3,10 @@ package hedera
 // #include <stdlib.h>
 // #include "hedera.h"
 import "C"
-import "unsafe"
+import (
+	"golang.org/x/crypto/sha3"
+	"unsafe"
+)
 
 type SecretKey struct {
 	inner C.HederaSecretKey
@@ -43,6 +46,14 @@ func SecretKeyFromString(s string) (SecretKey, error) {
 	}
 
 	return SecretKey{key}, nil
+}
+
+func Keccak256(data ...[]byte) []byte {
+	d := sha3.NewLegacyKeccak256()
+	for _, b := range data {
+		d.Write(b)
+	}
+	return d.Sum(nil)
 }
 
 func (secret SecretKey) Public() PublicKey {
