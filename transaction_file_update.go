@@ -2,7 +2,6 @@ package hedera
 
 // #include "hedera.h"
 import "C"
-import "unsafe"
 
 type TransactionFileUpdate struct {
 	transaction
@@ -21,8 +20,8 @@ func (tx TransactionFileUpdate) Key(public PublicKey) TransactionFileUpdate {
 	return tx
 }
 
-func (tx TransactionFileUpdate) Content(content []byte) TransactionFileUpdate {
-	C.hedera_transaction__file_update__set_contents(tx.inner, (*C.uint8_t)(unsafe.Pointer(&content)),
-		C.size_t(len(content)))
-	return tx
-}
+//func (tx TransactionFileUpdate) Content(content []byte) TransactionFileUpdate {
+//	C.hedera_transaction__file_update__set_contents(tx.inner, (*C.uint8_t)(unsafe.Pointer(&content)),
+//		C.size_t(len(content)))
+//	return tx
+//}
