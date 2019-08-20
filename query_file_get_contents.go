@@ -13,11 +13,11 @@ func newQueryFileGetContents(client Client, id FileID) QueryFileGetContents {
 	}
 }
 
-//func (query QueryFileGetContents) GetContents() ([]byte, error) {
-//	var cContents C.HederaArray
-//	res := C.hedera_query__file_get_contents_get(query.inner, &cContents)
-//	if res != 0 {
-//		return nil, hederaLastError()
-//	}
-//	return []byte(cContents.ptr), nil
-//}
+func (query QueryFileGetContents) GetContents() ([]byte, error) {
+	var cContents *C.HederaArray
+	res := C.hedera_query__file_get_contents__get(query.inner, &cContents)
+	if res != 0 {
+		return nil, hederaLastError()
+	}
+	return *(*[]byte)(cContents.ptr), nil
+}
