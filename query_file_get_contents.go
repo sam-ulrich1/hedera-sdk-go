@@ -2,6 +2,7 @@ package hedera
 
 // #include "hedera.h"
 import "C"
+import "unsafe"
 
 type QueryFileGetContents struct {
 	query
@@ -19,5 +20,5 @@ func (query QueryFileGetContents) GetContents() ([]byte, error) {
 	if res != 0 {
 		return nil, hederaLastError()
 	}
-	return *(*[]byte)(cContents.ptr), nil
+	return *(*[]byte)(unsafe.Pointer(&cContents)), nil
 }

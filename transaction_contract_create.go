@@ -2,7 +2,6 @@ package hedera
 
 // #include "hedera.h"
 import "C"
-import "unsafe"
 
 type TransactionContractCreate struct {
 	transaction
@@ -38,18 +37,13 @@ func (tx TransactionContractCreate) ProxyAccount(proxyId AccountID) TransactionC
 	return tx
 }
 
-func (tx TransactionContractCreate) ProxyFraction(fraction int32) TransactionContractCreate {
-	C.hedera_transaction__contract_create__set_proxy_fraction(tx.inner, C.int32_t(fraction))
-	return tx
-}
-
 func (tx TransactionContractCreate) AutoRenew(period Duration) TransactionContractCreate {
 	C.hedera_transaction__contract_create__set_auto_renew_period(tx.inner, cDuration(period))
 	return tx
 }
 
 func (tx TransactionContractCreate) ConstructorParams(params []byte) TransactionContractCreate {
-	C.hedera_transaction__contract_create__set_constructor_parameters(tx.inner, (*C.uint8_t)(unsafe.Pointer(&params)),
+	C.hedera_transaction__contract_create__set_constructor_parameters(tx.inner, (*C.uint8_t)(&params[0]),
 		C.size_t(len(params)))
 	return tx
 }

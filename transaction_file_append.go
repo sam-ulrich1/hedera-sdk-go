@@ -2,7 +2,6 @@ package hedera
 
 // #include "hedera.h"
 import "C"
-import "unsafe"
 
 type TransactionFileAppend struct {
 	transaction
@@ -14,7 +13,7 @@ func newTransactionFileAppend(client *Client, fileID FileID, content []byte) Tra
 			C.hedera_transaction__file_append__new(
 				client.inner,
 				cFileID(fileID),
-				(*C.uint8_t)(unsafe.Pointer(&content)),
+				(*C.uint8_t)(&content[0]),
 				C.size_t(len(content)))},
 	}
 }

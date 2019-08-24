@@ -21,7 +21,7 @@ func (tx TransactionFileUpdate) Key(public PublicKey) TransactionFileUpdate {
 }
 
 //func (tx TransactionFileUpdate) Content(content []byte) TransactionFileUpdate {
-//	C.hedera_transaction__file_update__set_contents(tx.inner, (*C.uint8_t)(unsafe.Pointer(&content)),
+//	C.hedera_transaction__file_update__set_contents(tx.inner, (*C.uint8_t)(&content[0]),
 //		C.size_t(len(content)))
 //	return tx
 //}

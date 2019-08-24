@@ -2,15 +2,14 @@ package hedera
 
 // #include "hedera.h"
 import "C"
-import "unsafe"
 
 type TransactionContractCall struct {
 	transaction
 }
 
-func newTransactionContractCall(client *Client) TransactionContractCall {
+func newTransactionContractCall(client *Client, contract ContractID) TransactionContractCall {
 	return TransactionContractCall{transaction{
-		C.hedera_transaction__contract_call__new(client.inner)}}
+		C.hedera_transaction__contract_call__new(client.inner, cContractID(contract))}}
 }
 
 func (tx TransactionContractCall) Gas(gas uint64) TransactionContractCall {
@@ -24,6 +23,6 @@ func (tx TransactionContractCall) Amount(amount uint64) TransactionContractCall 
 }
 
 func (tx TransactionContractCall) Parameters(params []byte) TransactionContractCall {
-	C.hedera_transaction__contract_call__set_function_parameters(tx.inner, (*C.uint8_t)(unsafe.Pointer(&params)), C.size_t(len(params)))
+	C.hedera_transaction__contract_call__set_function_parameters(tx.inner, (*C.uint8_t)(&params[0]), C.size_t(len(params)))
 	return tx
 }

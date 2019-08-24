@@ -2,7 +2,6 @@ package hedera
 
 // #include "hedera.h"
 import "C"
-import "unsafe"
 
 type TransactionFileCreate struct {
 	transaction
@@ -19,7 +18,7 @@ func (tx TransactionFileCreate) Key(public PublicKey) TransactionFileCreate {
 }
 
 func (tx TransactionFileCreate) Content(content []byte) TransactionFileCreate {
-	C.hedera_transaction__file_create__set_contents(tx.inner, (*C.uint8_t)(unsafe.Pointer(&content)),
+	C.hedera_transaction__file_create__set_contents(tx.inner, (*C.uint8_t)(&content[0]),
 		C.size_t(len(content)))
 	return tx
 }

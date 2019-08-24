@@ -14,8 +14,10 @@
 #include "hedera-file-info.h"
 #include "hedera-entity.h"
 #include "hedera-alloc.h"
+#include "hedera-function-result.h"
 
 #include "hedera-query.h"
+#include "hedera-query-contract-call.h"
 #include "hedera-query-contract-get-bytecode.h"
 #include "hedera-query-contract-get-info.h"
 #include "hedera-query-contract-get-records.h"

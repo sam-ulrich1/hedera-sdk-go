@@ -98,8 +98,13 @@ func (client Client) UpdateContract() TransactionContractUpdate {
 	return newTransactionContractUpdate(&client)
 }
 
-func (client Client) CallContract() TransactionContractCall {
-	return newTransactionContractCall(&client)
+func (client Client) CallContract(contract ContractID) TransactionContractCall {
+	return newTransactionContractCall(&client, contract)
+}
+
+func (client Client) CallContractQuery(contract ContractID, gas int64, params []byte,
+	maxResultSize int64) QueryContractCall {
+	return newQueryContractCall(&client, contract, gas, params, maxResultSize)
 }
 
 func (client Client) CreateFile() TransactionFileCreate {
