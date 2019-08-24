@@ -35,7 +35,7 @@ func (fs *FunctionSelector) FinishIntermediate() []byte {
 	var f []byte
 	if fs.Complete == false {
 		f = append(fs.Finished, ")"...)
-	}
+	} else { f = fs.Finished }
 	return Keccak256(f)
 }
 
