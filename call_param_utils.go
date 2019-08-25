@@ -144,21 +144,10 @@ func int256(val int64, bitWidth int) ([]byte, error) {
 	if err != nil { return nil, err }
 	output := buf.Bytes()
 
-	//output := make([]byte, bitWidth)
-
-	//count := 0
-	//for i := bitWidth; i >= 0; i -= 8 {
-	//	output[count] = byte(val >> uint(i))
-	//	count++
-	//}
-
 	return leftPad(output, val < 0), nil
 }
 
 func uint256(val uint64) ([]byte, error) {
-	//var b []byte
-	//binary.BigEndian.PutUint64(b, val)
-
 	buf := bytes.Buffer{}
 	err := binary.Write(&buf, binary.BigEndian, val)
 	if err != nil { return nil, err }
