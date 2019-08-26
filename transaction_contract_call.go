@@ -2,6 +2,7 @@ package hedera
 
 // #include "hedera.h"
 import "C"
+import "unsafe"
 
 type TransactionContractCall struct {
 	transaction
@@ -23,6 +24,10 @@ func (tx TransactionContractCall) Amount(amount uint64) TransactionContractCall 
 }
 
 func (tx TransactionContractCall) Parameters(params []byte) TransactionContractCall {
-	C.hedera_transaction__contract_call__set_function_parameters(tx.inner, (*C.uint8_t)(&params[0]), C.size_t(len(params)))
+	cParams := (*C.uint8_t)(unsafe.Pointer(&[]byte{}))
+	if len(params) > 0 {
+		cParams = (*C.uint8_t)(&params[0])
+	}
+	C.hedera_transaction__contract_call__set_function_parameters(tx.inner, cParams, C.size_t(len(params)))
 	return tx
 }

@@ -3,7 +3,11 @@ package hedera
 // #include <stdlib.h>
 // #include "hedera.h"
 import "C"
-import "unsafe"
+import (
+	"encoding/binary"
+	"errors"
+	"unsafe"
+)
 import "github.com/markbates/oncer"
 
 type AccountID struct {
@@ -62,6 +66,21 @@ func AccountIDFromString(s string) (AccountID, error) {
 	return goAccountID(id), nil
 }
 
+func AccountIDFromAddress(b []byte) (AccountID, error) {
+	if len(b) != 20 {
+		return AccountID{}, errors.New("ILLEGAL ARGUMENT ERROR: A solidity address " +
+			"should be exactly 20 bytes long")
+	}
+	shard := int64(binary.BigEndian.Uint32(b[0:4]))
+	realm := int64(binary.BigEndian.Uint64(b[4:12]))
+	acct := int64(binary.BigEndian.Uint64(b[12:20]))
+	return AccountID{
+		Shard: shard,
+		Realm: realm,
+		Account: acct,
+	}, nil
+}
+
 func (id AccountID) String() string {
 	cID := cAccountID(id)
 	return hederaString(C.hedera_account_id_to_str(&cID))
@@ -96,6 +115,21 @@ func ContractIDFromString(s string) (ContractID, error) {
 	return goContractID(id), nil
 }
 
+func ContractIDFromAddress(b []byte) (ContractID, error) {
+	if len(b) != 20 {
+		return ContractID{}, errors.New("ILLEGAL ARGUMENT ERROR: A solidity address " +
+			"should be exactly 20 bytes long")
+	}
+	shard := int64(binary.BigEndian.Uint32(b[0:4]))
+	realm := int64(binary.BigEndian.Uint64(b[4:12]))
+	acct := int64(binary.BigEndian.Uint64(b[12:20]))
+	return ContractID{
+		Shard: shard,
+		Realm: realm,
+		Contract: acct,
+	}, nil
+}
+
 func (id ContractID) String() string {
 	cID := cContractID(id)
 	return hederaString(C.hedera_contract_id_to_str(&cID))
@@ -128,6 +162,21 @@ func FileIDFromString(s string) (FileID, error) {
 	}
 
 	return goFileID(id), nil
+}
+
+func FileIDFromAddress(b []byte) (FileID, error) {
+	if len(b) != 20 {
+		return FileID{}, errors.New("ILLEGAL ARGUMENT ERROR: A solidity address " +
+			"should be exactly 20 bytes long")
+	}
+	shard := int64(binary.BigEndian.Uint32(b[0:4]))
+	realm := int64(binary.BigEndian.Uint64(b[4:12]))
+	acct := int64(binary.BigEndian.Uint64(b[12:20]))
+	return FileID{
+		Shard: shard,
+		Realm: realm,
+		File: acct,
+	}, nil
 }
 
 func (id FileID) String() string {

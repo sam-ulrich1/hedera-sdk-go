@@ -2,6 +2,7 @@ package hedera
 
 // #include "hedera.h"
 import "C"
+import "unsafe"
 
 type TransactionContractCreate struct {
 	transaction
@@ -43,7 +44,11 @@ func (tx TransactionContractCreate) AutoRenew(period Duration) TransactionContra
 }
 
 func (tx TransactionContractCreate) ConstructorParams(params []byte) TransactionContractCreate {
-	C.hedera_transaction__contract_create__set_constructor_parameters(tx.inner, (*C.uint8_t)(&params[0]),
+	cParams := (*C.uint8_t)(unsafe.Pointer(&[]byte{}))
+	if len(params) > 0 {
+		cParams = (*C.uint8_t)(&params[0])
+	}
+	C.hedera_transaction__contract_create__set_constructor_parameters(tx.inner, cParams,
 		C.size_t(len(params)))
 	return tx
 }

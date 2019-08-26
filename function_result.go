@@ -4,6 +4,7 @@ package hedera
 // #include "hedera.h"
 import "C"
 import (
+	"math/big"
 	"unsafe"
 )
 
@@ -86,4 +87,48 @@ func goContractFunctionResult(fs C.HederaContractFunctionResult) ContractFunctio
 		GasUsed: uint64(fs.gas_used),
 		LogInfo: logInfo,
 	}
+}
+
+func (fr *ContractFunctionResult) getByteBuffer(offset int) byte {
+	return fr.Result[offset]
+}
+
+func (fr *ContractFunctionResult) getIntValueAt(valueOffset int) int {
+	return int(fr.getByteBuffer(valueOffset+28))
+}
+
+func (fr *ContractFunctionResult) getInt256(valIndex int) []byte {
+	return fr.Result[valIndex * 32 : (valIndex + 1) * 32]
+}
+
+func (fr *ContractFunctionResult) GetInt(valIndex int) int {
+	return fr.getIntValueAt(valIndex * 32)
+}
+
+func (fr *ContractFunctionResult) GetLong(valIndex int) int64 {
+	return int64(fr.getIntValueAt(valIndex * 32 + 24))
+}
+
+func (fr *ContractFunctionResult) GetBigInt(valIndex int) big.Int {
+	return *big.NewInt(int64(fr.getIntValueAt(valIndex * 32)))
+}
+
+func (fr *ContractFunctionResult) GetBytes(valIndex int) ([]byte, error) {
+	offset := fr.GetInt(valIndex)
+	l := fr.getIntValueAt(int(offset))
+	return fr.Result[offset + 32 : offset + 32 + l], nil
+}
+
+func (fr *ContractFunctionResult) GetString(valIndex int) (string, error) {
+	s, err := fr.GetBytes(valIndex)
+	return string(s), err
+}
+
+func (fr *ContractFunctionResult) GetBool(valIndex int) bool {
+	return fr.getByteBuffer(valIndex * 32 + 31) != 0
+}
+
+func (fr *ContractFunctionResult) GetAddress(valIndex int) []byte {
+	offset := valIndex * 32
+	return fr.Result[offset + 12 : offset + 32]
 }

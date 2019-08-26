@@ -2,6 +2,7 @@ package hedera
 
 // #include "hedera.h"
 import "C"
+import "unsafe"
 
 type QueryContractCall struct {
 	query
@@ -9,9 +10,13 @@ type QueryContractCall struct {
 
 func newQueryContractCall(client *Client, contract ContractID, gas int64, params []byte,
 	maxResultSize int64) QueryContractCall {
+	cParams := (*C.uint8_t)(unsafe.Pointer(&[]byte{}))
+	if len(params) > 0 {
+		cParams = (*C.uint8_t)(&params[0])
+	}
 	return QueryContractCall{
 		query{C.hedera_query__contract_call__new(client.inner, cContractID(contract),
-			C.uint64_t(gas), (*C.uint8_t)(&params[0]), C.size_t(len(params)), C.uint64_t(maxResultSize))},
+			C.uint64_t(gas), cParams, C.size_t(len(params)), C.uint64_t(maxResultSize))},
 	}
 }
 

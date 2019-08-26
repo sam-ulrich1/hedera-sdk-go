@@ -103,10 +103,9 @@ func (cp *CallParams) AddFixedBytes(param []byte, fixedLen int) error {
 			strconv.Itoa(fixedLen))
 	}
 
-	encBytes, err := encodeBytes(param)
-	if err != nil { return err }
+	encBytes := encodeFixedBytes(param)
 
-	arg, err := NewArgument(encBytes, true)
+	arg, err := NewArgument(encBytes, false)
 	if err != nil { return err }
 
 	cp.addParamType("bytes" + strconv.Itoa(fixedLen))
@@ -127,12 +126,39 @@ func (cp *CallParams) AddByteArray(param [][]byte) error {
 	arg, err := NewArgument(argBytes, true)
 	if err != nil { return err }
 
-	cp.addParamType("byte[]")
+	cp.addParamType("bytes[]")
 	cp.Args = append(cp.Args, *arg)
 	return nil
 }
 
-func (cp *CallParams) AddFixedByteArray(param [][]byte, fixedLen int) error {
+func (cp *CallParams) AddFixedByteArray(param [][]byte, byteLen int) error {
+	for _, v := range param {
+		err := checkFixedArrayLen(v, byteLen)
+		if err != nil { return err }
+	}
+
+	if byteLen > 32 {
+		return errors.New("ILLEGAL ARGUMENT ERROR: bytesN cannot have a length greater than 32; given length: " +
+			strconv.Itoa(byteLen))
+	}
+
+	var list [][]byte
+	for _, v := range param {
+		b := encodeFixedBytes(v)
+		list = append(list, b)
+	}
+
+	argBytes, err := encodeByteArray(list, true)
+	if err != nil { return err }
+	arg, err := NewArgument(argBytes, true)
+	if err != nil { return err }
+
+	cp.addParamType("bytes" + strconv.Itoa(byteLen)  + "[]")
+	cp.Args = append(cp.Args, *arg)
+	return nil
+}
+
+func (cp *CallParams) AddByteFixedArray(param [][]byte, fixedLen int) error {
 	err := checkFixedArrayLen(param, fixedLen)
 	if err != nil { return err }
 
@@ -148,7 +174,32 @@ func (cp *CallParams) AddFixedByteArray(param [][]byte, fixedLen int) error {
 	arg, err := NewArgument(argBytes, true)
 	if err != nil { return err }
 
-	cp.addParamType("byte[" + strconv.Itoa(fixedLen) + "]")
+	cp.addParamType("bytes[" + strconv.Itoa(fixedLen) + "]")
+	cp.Args = append(cp.Args, *arg)
+	return nil
+}
+
+func (cp *CallParams) AddFixedByteFixedArray(param [][]byte, fixedByteLen int, fixedLen int) error {
+	err := checkFixedArrayLen(param, fixedLen)
+	if err != nil { return err }
+
+	for _, v := range param {
+		err := checkFixedArrayLen(v, fixedByteLen)
+		if err != nil { return err }
+	}
+
+	var list [][]byte
+	for _, v := range param {
+		b := encodeFixedBytes(v)
+		list = append(list, b)
+	}
+
+	argBytes, err := encodeByteArray(list, true)
+	if err != nil { return err }
+	arg, err := NewArgument(argBytes, true)
+	if err != nil { return err }
+
+	cp.addParamType("bytes" + strconv.Itoa(fixedByteLen) + "[" + strconv.Itoa(fixedLen) + "]")
 	cp.Args = append(cp.Args, *arg)
 	return nil
 }

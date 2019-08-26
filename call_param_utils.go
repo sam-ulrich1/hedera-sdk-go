@@ -176,6 +176,10 @@ func encodeBytes(b []byte) ([]byte, error) {
 	return append(ib, rightPad(b)...), nil
 }
 
+func encodeFixedBytes(b []byte) []byte {
+	return leftPad(b, false)
+}
+
 func encodeByteArray(byteArray [][]byte, prependLen bool) ([]byte, error) {
 	var list []byte
 	for _, v := range byteArray {
