@@ -43,6 +43,8 @@ def get_default_target():
 
     if t == "x86_64-unknown-linux-gnu":
         t = "x86_64-unknown-linux-musl"
+    elif t == "x86_64":
+        t == "x86_64-apple-darwin"
 
     return t
 
