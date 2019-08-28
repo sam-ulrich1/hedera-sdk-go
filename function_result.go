@@ -4,6 +4,8 @@ package hedera
 // #include "hedera.h"
 import "C"
 import (
+	"encoding/binary"
+	"encoding/hex"
 	"math/big"
 	"unsafe"
 )
@@ -101,6 +103,13 @@ func (fr *ContractFunctionResult) getInt256(valIndex int) []byte {
 	return fr.Result[valIndex * 32 : (valIndex + 1) * 32]
 }
 
+func (fr *ContractFunctionResult) getArrayLength(offset int) int64 {
+	lengthStart := offset + 24
+	lengthEnd := lengthStart + 8
+	lengthBytes := fr.Result[lengthStart:lengthEnd]
+	return int64(binary.BigEndian.Uint64(lengthBytes))
+}
+
 func (fr *ContractFunctionResult) GetInt(valIndex int) int {
 	return fr.getIntValueAt(valIndex * 32)
 }
@@ -119,6 +128,19 @@ func (fr *ContractFunctionResult) GetBytes(valIndex int) ([]byte, error) {
 	return fr.Result[offset + 32 : offset + 32 + l], nil
 }
 
+func (fr *ContractFunctionResult) GetByteArray(valIndex int) [][]byte {
+	offset := (valIndex * 32) + 32
+	start := offset + 32
+	length := fr.getArrayLength(offset)
+	var addrs [][]byte
+	for i := 0; i < int(length); i++ {
+		addrOffset := (i * 32) + start
+		byteChunk := fr.Result[addrOffset : addrOffset + 32]
+		addrs = append(addrs, byteChunk)
+	}
+	return addrs
+}
+
 func (fr *ContractFunctionResult) GetString(valIndex int) (string, error) {
 	s, err := fr.GetBytes(valIndex)
 	return string(s), err
@@ -131,4 +153,17 @@ func (fr *ContractFunctionResult) GetBool(valIndex int) bool {
 func (fr *ContractFunctionResult) GetAddress(valIndex int) []byte {
 	offset := valIndex * 32
 	return fr.Result[offset + 12 : offset + 32]
+}
+
+func (fr *ContractFunctionResult) GetAddressArray(valIndex int) []string {
+	offset := (valIndex * 32) + 32
+	start := offset + 32
+	length := fr.getArrayLength(offset)
+	var addrs []string
+	for i := 0; i < int(length); i++ {
+		addrOffset := (i * 32) + start
+		byteChunk := fr.Result[addrOffset + 12 : addrOffset + 32]
+		addrs = append(addrs, hex.EncodeToString(byteChunk))
+	}
+	return addrs
 }
