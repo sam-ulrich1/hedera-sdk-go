@@ -8,5 +8,5 @@ type TransactionReceipt struct {
 }
 
 func (status Status) String() string {
-	return statusText[status]
+	return statusText(status)
 }

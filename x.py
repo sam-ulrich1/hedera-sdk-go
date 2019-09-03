@@ -39,8 +39,14 @@ def update_submodules():
 def get_default_target():
     targets = sh("rustup target list", silent=True).decode()
     m = re.search(r"(.*?)\s*\(default\)", targets)
+    t = m[1]
 
-    return m[1]
+    if t == "x86_64-unknown-linux-gnu":
+        t = "x86_64-unknown-linux-musl"
+    elif t == "x86_64":
+        t == "x86_64-apple-darwin"
+
+    return t
 
 
 def build(release=False):

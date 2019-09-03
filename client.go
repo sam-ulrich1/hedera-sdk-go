@@ -90,12 +90,49 @@ func (client Client) CreateAccount() TransactionCryptoCreate {
 	return newTransactionCryptoCreate(&client)
 }
 
+func (client Client) CreateContract() TransactionContractCreate {
+	return newTransactionContractCreate(&client)
+}
+
+func (client Client) UpdateContract() TransactionContractUpdate {
+	return newTransactionContractUpdate(&client)
+}
+
+func (client Client) CallContract(contract ContractID) TransactionContractCall {
+	return newTransactionContractCall(&client, contract)
+}
+
+func (client Client) CallContractQuery(contract ContractID, gas int64, params []byte,
+	maxResultSize int64) QueryContractCall {
+	return newQueryContractCall(&client, contract, gas, params, maxResultSize)
+}
+
+func (client Client) CreateFile() TransactionFileCreate {
+	return newTransactionFileCreate(&client)
+}
+
+func (client Client) UpdateFile(fileID FileID) TransactionFileUpdate {
+	return newTransactionFileUpdate(&client, fileID)
+}
+
+func (client Client) AppendFile(fileID FileID, content []byte) TransactionFileAppend {
+	return newTransactionFileAppend(&client, fileID, content)
+}
+
+func (client Client) DeleteFile(fileID FileID) TransactionFileDelete {
+	return newTransactionFileDelete(&client, fileID)
+}
+
 func (client Client) Account(id AccountID) PartialAccountMessage {
 	return PartialAccountMessage{client, id}
 }
 
 func (client Client) Transaction(id TransactionID) PartialTransactionMessage {
 	return PartialTransactionMessage{client, id}
+}
+
+func (client Client) FileContents(fileID FileID) QueryFileGetContents {
+	return newQueryFileGetContents(client, fileID)
 }
 
 type PartialAccountMessage struct {
