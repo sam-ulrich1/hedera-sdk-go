@@ -163,17 +163,15 @@ func bigInt256(val big.Int) ([]byte, error) {
 	return leftPad(padBigBytes(&val, bitLen), cmp > -1), nil
 }
 
-func encodeString(str string) ([]byte, error) {
-	b := []byte(str)
+func encodeBytes(b []byte) ([]byte, error) {
 	ib, err := int256(int64(len(b)), 32)
 	if err != nil { return nil, err }
 	return append(ib, rightPad(b)...), nil
 }
 
-func encodeBytes(b []byte) ([]byte, error) {
-	ib, err := int256(int64(len(b)), 32)
-	if err != nil { return nil, err }
-	return append(ib, rightPad(b)...), nil
+func encodeString(str string) ([]byte, error) {
+	b := []byte(str)
+	return encodeBytes(b)
 }
 
 func encodeFixedBytes(b []byte) []byte {

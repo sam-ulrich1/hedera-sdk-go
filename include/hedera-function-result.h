@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include "hedera-id.h"
-//#include "hedera-contract-log-info.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -132,13 +132,13 @@ func (fr *ContractFunctionResult) GetByteArray(valIndex int) [][]byte {
 	offset := (valIndex * 32) + 32
 	start := offset + 32
 	length := fr.getArrayLength(offset)
-	var addrs [][]byte
+	var bytes [][]byte
 	for i := 0; i < int(length); i++ {
-		addrOffset := (i * 32) + start
-		byteChunk := fr.Result[addrOffset : addrOffset + 32]
-		addrs = append(addrs, byteChunk)
+		bOffset := (i * 32) + start
+		byteChunk := fr.Result[bOffset : bOffset + 32]
+		bytes = append(bytes, byteChunk)
 	}
-	return addrs
+	return bytes
 }
 
 func (fr *ContractFunctionResult) GetString(valIndex int) (string, error) {

@@ -100,6 +100,15 @@ const (
 	NotSpecialAccount                    Status = 94
 	ContractNegativeGas                  Status = 95
 	ContractNegativeValue                Status = 96
+	InvalidFeeFile						 Status = 97
+	InvalidExchangeRateFile				 Status = 98
+	InsufficientLocalCallGas			 Status = 99
+	EntityNotAllowedToDelete			 Status = 100
+	AuthorizationFailed					 Status = 101
+	FileUploadedProtoInvalid			 Status = 102
+	FileUploadedProtoNotSavedToDisk		 Status = 103
+	FeeScheduleFilePartUploaded			 Status = 104
+	ExchangeRateChangeLimitExceeded		 Status = 105
 )
 
 func statusText(s Status) string {
@@ -298,5 +307,23 @@ func statusText(s Status) string {
 		return "CONTRACT NEGATIVE GAS"
 	case 96:
 		return "CONTRACT NEGATIVE VALUE"
+	case 97:
+		return "INVALID FEE FILE"
+	case 98:
+		return "INVALID EXCHANGE RATE FILE"
+	case 99:
+		return "INSUFFICIENT LOCAL CALL GAS"
+	case 100:
+		return "ENTITY NOT ALLOWED TO DELETE"
+	case 101:
+		return "AUTHORIZATION FAILED"
+	case 102:
+		return "FILE UPLOADED PROTO INVALID"
+	case 103:
+		return "FILE UPLOADED PROTO NOT SAVED TO DISK"
+	case 104:
+		return "FEE SCHEDULE FILE PART UPLOADED"
+	case 105:
+		return "EXCHANGE RATE CHANGE LIMIT EXCEEDED"
 	}
 }
