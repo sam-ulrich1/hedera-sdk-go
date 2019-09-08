@@ -175,7 +175,7 @@ func encodeString(str string) ([]byte, error) {
 }
 
 func encodeFixedBytes(b []byte) []byte {
-	return leftPad(b, false)
+	return rightPad(b)
 }
 
 func encodeByteArray(byteArray [][]byte, prependLen bool) ([]byte, error) {
