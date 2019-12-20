@@ -109,6 +109,9 @@ const (
 	FileUploadedProtoNotSavedToDisk		 Status = 103
 	FeeScheduleFilePartUploaded			 Status = 104
 	ExchangeRateChangeLimitExceeded		 Status = 105
+	MaxContractStorageExceeded			 Status = 106
+	MaxGasLimitExceeded					 Status = 111
+	MaxFileSizeExceeded					 Status = 112
 )
 
 func statusText(s Status) string {
@@ -325,5 +328,11 @@ func statusText(s Status) string {
 		return "FEE SCHEDULE FILE PART UPLOADED"
 	case 105:
 		return "EXCHANGE RATE CHANGE LIMIT EXCEEDED"
+	case 106:
+		return "MAX CONTRACT STORAGE EXCEEDED"
+	case 111:
+		return "MAX GAS LIMIT EXCEEDED"
+	case 112:
+		return "MAX FILE SIZE EXCEEDED"
 	}
 }
